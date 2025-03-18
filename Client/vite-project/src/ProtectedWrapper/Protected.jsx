@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Login() {
+function Protected() {
   return (
     <div>
-        Login
+      
     </div>
   )
 }
 
-export default Login
+export default Protected
