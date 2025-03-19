@@ -1,13 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 
+
 const UserSlice = createSlice({
     name: 'User',
 
     initialState : [],
 
     reducers : {
-        ReadFromDB:(State,action)=>{}
+        ReadFromDB:(state,action)=>{
+            return action.payload;
+        }
     }
 })
 
