@@ -1,16 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../axios/axios";
 
 // Move the asynchronous logic outside the reducers
 export const ReadFromDB = () => async (dispatch) => {
-    const token = localStorage.getItem('token').replace(/"/g, '');
     try {
-        const res = await axios.get('http://localhost:5000/Profile/', {
-            headers: {
-                'Authorization': `${token}`
-            }
-        });
-
+        const token = localStorage.getItem('token');
+        const res = await axiosInstance.get('/Profile');
+        console.log(res)
         dispatch(setProfile({
             _id: res.data._id,
             FirstName: res.data.FirstName,
@@ -26,7 +22,7 @@ export const ReadFromDB = () => async (dispatch) => {
 const ProfileSlice = createSlice({
     name: 'Profile',
     initialState: {
-        _id: '',
+        _id: 'Guest',
         FirstName: '',
         LastName: '',
         email: '',

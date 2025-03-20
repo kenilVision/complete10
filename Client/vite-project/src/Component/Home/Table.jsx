@@ -5,7 +5,7 @@ import {updateProfileFieldEdit} from '../../Slice/FormSlice';
 import {toggleModal} from '../../Slice/modal.js'
 import {resetQuery,total} from '../../Slice/Queries'
 import CommonTable from '../Common/CommonTable.jsx';
-import axios from'axios'
+import axiosInstance from '../../axios/axios.js';
 
 function Table() {
     
@@ -16,7 +16,7 @@ function Table() {
         const fetchData = async () => {
             try {
             const queryString = new URLSearchParams(quries).toString();
-            const response = await axios.get(`http://localhost:5000/User?${queryString}`);
+            const response = await axiosInstance.get(`/User?${queryString}`);
       
               const formattedData = response.data.user.map((user) => {
                 return {
@@ -45,7 +45,7 @@ function Table() {
      const editloader =  async (id) =>{
         try{
             
-            const response = await axios.get(`http://localhost:5000/User/${id}`);
+            const response = await axiosInstance.get(`/User/${id}`);
             const formattedData =  {
                   _id: response.data._id,
                   FirstName: response.data.FirstName,
@@ -69,9 +69,9 @@ function Table() {
 
      const del = async (_id) => {
         try {
-            await axios.delete(`http://localhost:5000/User/${_id}`);  
+            await axiosInstance.delete(`/User/${_id}`);  
 
-            const response = await axios.get('http://localhost:5000/user');
+            const response = await axiosInstance.get('cd/user');
       
               const formattedData = response.data.user.map((user) => {
                 return {

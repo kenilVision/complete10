@@ -1,55 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
+import { ReadFromDB } from '../Slice/ProfileSlice';
+import axiosInstance from '../axios/axios'; // Assuming axios instance is managed separately
 
 const Protected = ({ children }) => {
   const Profile = useSelector(state => state.profile);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const verifyToken = async () => {
       try {
-       
-        const response = await axios.get(`http://localhost:5000/Profile/`, {
-          headers: {
-            Authorization: `${localStorage.getItem('token')}`,
-          },
-        });
+        const response = await axiosInstance.get('/Profile/');
 
         if (response.data.success) {
           setIsAuthenticated(true);
-          console.log(response.data)
+          dispatch(ReadFromDB());
         } else {
-          setIsAuthenticated(false); 
+          setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error('Error verifying token:', error);
-        setIsAuthenticated(false); 
+        if (error.response?.status === 401) {
+          console.error('Unauthorized access. Redirecting...');
+        } else {
+          console.error('Error verifying token:', error);
+        }
+        setIsAuthenticated(false);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
-    if (!Profile) {
-      verifyToken(); 
+    if (Profile._id == 'Guest') {
+      verifyToken();
     } else {
       setIsAuthenticated(true);
       setLoading(false);
     }
-  }, [Profile]);
+  },[Profile, dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>; 
-  }
+  if (loading) return <div>Loading...</div>;
+  if (!isAuthenticated) return <Navigate to="/Login" />;
 
-  if (!isAuthenticated) {
-    return <Navigate to="/Login" />;
-  }
-
-  return children; 
+  return children;
 };
 
 export default Protected;
