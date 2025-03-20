@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector , useDispatch } from 'react-redux'
-import {set ,resetQuery} from '../../Redux/Slice/Queries'
+import {set ,resetQuery} from '../../Slice/Queries'
 
 function Search_Sort() {
   const dispatch = useDispatch()
@@ -13,7 +13,7 @@ function Search_Sort() {
     <nav className="bg-gray-900 w-full p-4">
     <div className="container mx-auto flex justify-between items-center">
       {/* Form for search */}
-      <form className="flex space-x-2" role="search">
+
         <input
           className="form-input bg-gray-700 text-white px-4 py-2 border border-[#30363D] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           type="search"
@@ -22,9 +22,9 @@ function Search_Sort() {
         value ={quries.search}
          onChange={(e)=>{dispatch(set(e.target))}}
         />
-      </form>
 
-      {/* Sort dropdown */}
+
+
       <select
         className="form-select bg-gray-700 text-white px-4 py-2 border border-[#30363D] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
         aria-label="Sort options"
@@ -32,9 +32,7 @@ function Search_Sort() {
             dispatch(set({ name: 'sort', value: e.target.value }));
           }}
       >
-        <option value="" defaultValue>
-          Sort by: Featured
-        </option>
+        <option value="" defaultValue>Sort by: Featured</option>
         <option value="FirstName">First Name</option>
         <option value="LastName">Last Name</option>
         <option value="Email">Email</option>

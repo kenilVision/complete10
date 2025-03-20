@@ -7,8 +7,8 @@ import About from './Page/About';
 import Home from './Page/Home';
 import SignUp from './Page/SignUp';
 import { Provider } from 'react-redux';
-import store from './Redux/Store';
-
+import store from './Store/Store';
+import Protected from './ProtectedWrapper/Protected';
 function App() {
   return (
     <Provider store={store}>

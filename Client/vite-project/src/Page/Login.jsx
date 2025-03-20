@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
-import {ReadFromDB} from '../Redux/Slice/ProfileSlice'
-import bcrypt from 'bcryptjs';
-const saltRounds = 10;
+import {ReadFromDB} from '../Slice/ProfileSlice'
 import axios from 'axios';
 
 function Login() {
@@ -23,6 +21,8 @@ function Login() {
         e.preventDefault();
         axios.post('http://localhost:5000/Profile/login/', Credential)
             .then(res => {
+                console.log(res                
+                )
                 const token = res.data.token;
                 localStorage.setItem('token', JSON.stringify(token));
                 dispatch(ReadFromDB())

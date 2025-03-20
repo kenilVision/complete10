@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch} from 'react-redux'
-import { updateProfileField, updateHobbies, reset} from '../../Redux/Slice/FormSlice';
-import {ReadFromDB} from '../../Redux/Slice/UserSlice.js'
-import {toggleModal} from '../../Redux/Slice/modal.js';
-import {total, resetQuery} from '../../Redux/Slice/Queries'
+import { updateProfileField, updateHobbies, reset} from '../../Slice/FormSlice';
+import {ReadFromDB} from '../../Slice/UserSlice.js'
+import {toggleModal} from '../../Slice/modal.js';
+import {total, resetQuery} from '../../Slice/Queries'
 import axios from 'axios';
+
+
 const ModalComponent = () => {
   
   const formData = useSelector(state => state.form)
@@ -74,7 +76,7 @@ const ModalComponent = () => {
                             Gender: user.Gender,
                             filename: user.url,
                           };
-                        });
+                        }); 
           dispatch(resetQuery())
           dispatch(total(response.data.totalPages))  
           dispatch(ReadFromDB(formattedData));

@@ -18,7 +18,7 @@ exports.ProfileInfo = async (req, res) =>{
                 res.send({message:"no data found"})
             }
         }
-        catch{
+        catch(err){
             res.send({message:"api fail"})
         }
 }

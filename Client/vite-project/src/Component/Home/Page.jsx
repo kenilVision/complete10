@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {total,page} from '../../Redux/Slice/Queries'
+import {total,page} from '../../Slice/Queries'
 import { useDispatch, useSelector } from 'react-redux'
 
 function Page() {
