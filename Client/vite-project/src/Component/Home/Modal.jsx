@@ -1,146 +1,23 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { updateProfileField, updateHobbies, reset } from '../../Slice/FormSlice';
-import { ReadFromDB } from '../../Slice/UserSlice.js'
-import { toggleModal } from '../../Slice/modal.js';
-import { total, resetQuery } from '../../Slice/Queries'
-import axiosInstance from '../../axios/axios'
+import React from 'react';
 
-
-const ModalComponent = () => {
-
-  const formData = useSelector(state => state.form)
-  const dispatch = useDispatch()
-  const isModalOpen = useSelector(state => state.modal)
-  const [selectedFile, setSelectedFile] = useState(null);
-  const quries = useSelector(state => state.queries)
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    dispatch(updateProfileField({ name, value }));
-  }
-
-  const handleHobbiesChange = (e) => {
-    const { value, checked } = e.target;
-    dispatch(updateHobbies({ hobby: value, checked }));
-  };
-
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file); // Keep the file in local state
-  };
-
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-
-
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append('FirstName', formData.FirstName);
-    formDataToSubmit.append('LastName', formData.LastName);
-    formDataToSubmit.append('Email', formData.Email);
-    formDataToSubmit.append('MobileNumber', formData.MobileNumber);
-    formDataToSubmit.append('Hobbies', JSON.stringify(formData.Hobbies));
-    formDataToSubmit.append('Gender', formData.Gender);
-    if (formData._id) {
-      formDataToSubmit.append('_id', formData._id);
-    }
-    if (selectedFile) {
-      formDataToSubmit.append('file', selectedFile);
-    }
-    if (formDataToSubmit._id === '') {
-      delete formDataToSubmit._id;
-    }
-    console.log(formData)
-    try {
-      if (formData._id)
-      {
-        await axiosInstance.put('/User', formDataToSubmit, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        });
-  
-      dispatch(toggleModal());
-      dispatch(reset());
-      const queryString = new URLSearchParams(quries).toString();
-
-       const response =  await axiosInstance.put(`/User?${queryString}`);
-        const formattedData = response.data.user.map((user) => {
-          return {
-            _id: user._id,
-            FirstName: user.FirstName,
-            LastName: user.LastName,
-            Email: user.Email,
-            MobileNumber: user.MobileNumber,
-            Hobbies: user.Hobbies,
-            Gender: user.Gender,
-            filename: user.url,
-          };
-        });
-        dispatch(resetQuery())
-        dispatch(total(response.data.totalPages))
-        dispatch(ReadFromDB(formattedData));
-    } 
-    else {
-  
-      await axiosInstance.post('/User', formDataToSubmit, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
-      });
-      dispatch(toggleModal());
-      dispatch(reset());
-      const queryString = new URLSearchParams(quries).toString();
-      const response =  await axiosInstance.put(`/User?${queryString}`);
-
-      const formattedData = response.data.user.map((user) => {
-        return {
-          _id: user._id,
-          FirstName: user.FirstName,
-          LastName: user.LastName,
-          Email: user.Email,
-          MobileNumber: user.MobileNumber,
-          Hobbies: user.Hobbies,
-          Gender: user.Gender,
-          filename: user.url,
-        };
-      });
-      dispatch(resetQuery())
-      dispatch(total(response.data.totalPages))
-      dispatch(ReadFromDB(formattedData));
-    }
-  } catch (error) {
-    if (error.response.data.flag === 1) {
-      alert("Email already exists");
-    }
-    if (error.response.data.flag === 2) {
-      alert("Valid Mobile Number is required");
-    }
-    console.error("Error submitting form data:", error.response.data);
-  }
-
-};
-
-
+const ModalComponent = ({modal,setmodel , form , resetForm,updateForm,Submitform}) => {
 
 
 return (
   <div>
 
     <button
-      onClick={() => { dispatch(toggleModal()) }}
+      onClick={() => { setmodel(!modal) }}
       className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     >
       Add user
     </button>
 
 
-    {isModalOpen && (
+    {modal && (
       <div
         id="crud-modal"
-        className="fixed top-0 left-0 right-0 z-50 w-full h-screen flex justify-center items-center bg-gray-900 bg-opacity-50"
+        className="fixed top-0 left-0 right-0 z-50 w-full h-screen flex justify-center items-center bg-opacity-50 bg-gray-900 "
       >
         <div className="relative p-4 w-full max-w-md max-h-full">
           <div className="bg-white rounded-lg shadow-sm dark:bg-gray-700">
@@ -150,15 +27,15 @@ return (
               </h3>
             </div>
 
-            <form className="p-4 md:p-5" onSubmit={handleSubmit}>
+            <form className="p-4 md:p-5" onSubmit={(e)=>Submitform(e)}>
               <div className="grid gap-4 mb-4 grid-cols-2">
                 <div className="col-span-2">
                   <input
                     type="text"
                     name="_id"
-                    value={formData._id}
+                    value={form._id}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-
+                    hidden
                   />
 
                   <label htmlFor="FirstName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -170,8 +47,8 @@ return (
                     name="FirstName"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="First name"
-                    value={formData.FirstName}
-                    onChange={handleInputChange}
+                    value={form.FirstName}
+                    onChange={(e)=>updateForm(e)}
                     required
                   />
                 </div>
@@ -186,8 +63,8 @@ return (
                     name="LastName"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="Last name"
-                    value={formData.LastName}
-                    onChange={handleInputChange}
+                    value={form.LastName}
+                    onChange={(e)=>updateForm(e)}
                     required
                   />
                 </div>
@@ -202,8 +79,8 @@ return (
                     name="Email"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="Email"
-                    value={formData.Email}
-                    onChange={handleInputChange}
+                    value={form.Email}
+                    onChange={(e)=>updateForm(e)}
                     required
                   />
                 </div>
@@ -213,13 +90,13 @@ return (
                     Mobile Number
                   </label>
                   <input
-                    type="tel"
+                    type="number"
                     id="MobileNumber"
                     name="MobileNumber"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="Mobile Number"
-                    value={formData.MobileNumber}
-                    onChange={handleInputChange}
+                    value={form.MobileNumber}
+                    onChange={(e)=>updateForm(e)}
                     required
                   />
                 </div>
@@ -233,8 +110,8 @@ return (
                       <input
                         type="checkbox"
                         value="Sports"
-                        checked={formData.Hobbies.includes('Sports') || false}
-                        onChange={handleHobbiesChange}
+                        checked={form.Hobbies.includes('Sports') || false}
+                        onChange={(e)=>updateForm(e)}
                       />
                       Sports
                     </label>
@@ -242,8 +119,8 @@ return (
                       <input
                         type="checkbox"
                         value="Art"
-                        checked={formData.Hobbies.includes('Art') || false}
-                        onChange={handleHobbiesChange}
+                        checked={form.Hobbies.includes('Art') || false}
+                        onChange={(e)=>updateForm(e)}
                       />
                       Art
                     </label>
@@ -251,8 +128,8 @@ return (
                       <input
                         type="checkbox"
                         value="Game"
-                        checked={formData.Hobbies.includes('Game') || false}
-                        onChange={handleHobbiesChange}
+                        checked={form.Hobbies.includes('Game') || false}
+                        onChange={(e)=>updateForm(e)}
                       />
                       Game
                     </label>
@@ -269,8 +146,8 @@ return (
                         type="radio"
                         name="Gender"
                         value="male"
-                        checked={formData.Gender === 'male'}
-                        onChange={handleInputChange}
+                        checked={form.Gender === 'male'}
+                        onChange={(e)=>updateForm(e)}
                       />
                       Male
                     </label>
@@ -279,8 +156,8 @@ return (
                         type="radio"
                         name="Gender"
                         value="female"
-                        checked={formData.Gender === 'female'}
-                        onChange={handleInputChange}
+                        checked={form.Gender === 'female'}
+                        onChange={(e)=>updateForm(e)}
                       />
                       Female
                     </label>
@@ -297,15 +174,13 @@ return (
                     id="file"
                     name="file"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-
-                    onChange={handlePhotoChange}
+                    onChange={(e)=>updateForm(e)}
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-
                 className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -317,8 +192,8 @@ return (
               <button
                 type="button"
                 onClick={() => {
-                  dispatch(toggleModal());
-                  dispatch(reset());
+                  setmodel(!modal)
+                  resetForm()
                 }}
                 className="ml-2 text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
               >

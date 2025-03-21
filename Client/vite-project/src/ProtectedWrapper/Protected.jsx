@@ -1,50 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate ,useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ReadFromDB } from '../Slice/ProfileSlice';
-import axiosInstance from '../axios/axios'; // Assuming axios instance is managed separately
 
 const Protected = ({ children }) => {
-  const Profile = useSelector(state => state.profile);
+  const profile = useSelector((state) => state.profile);
   const dispatch = useDispatch();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const location = useLocation(); 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const verifyToken = async () => {
+      const token = localStorage.getItem('token');
+      const loggedIn = localStorage.getItem('loggedIn');
+      
+      if (!token || !loggedIn) {
+        setLoading(false); 
+        return;
+      }
       try {
-        const response = await axiosInstance.get('/Profile/');
-
-        if (response.data.success) {
-          setIsAuthenticated(true);
-          dispatch(ReadFromDB());
-        } else {
-          setIsAuthenticated(false);
-        }
+         dispatch(ReadFromDB());
       } catch (error) {
-        if (error.response?.status === 401) {
-          console.error('Unauthorized access. Redirecting...');
-        } else {
-          console.error('Error verifying token:', error);
-        }
-        setIsAuthenticated(false);
+        console.error('Error verifying token:', error);
+        localStorage.clear(); 
       } finally {
-        setLoading(false);
+        setLoading(false); 
       }
     };
 
-    if (Profile._id == 'Guest') {
+    if (!profile._id || profile._id === 'Guest') {
       verifyToken();
     } else {
-      setIsAuthenticated(true);
-      setLoading(false);
+      setLoading(false); 
     }
-  },[Profile, dispatch]);
+  },[]);
 
-  if (loading) return <div>Loading...</div>;
-  if (!isAuthenticated) return <Navigate to="/Login" />;
+  const loginTime = localStorage.getItem('loginTime');
+  const currentTime = new Date().getTime();
 
-  return children;
+  
+  if (loginTime && currentTime - loginTime > 10 * 1000) {
+        localStorage.clear();
+        return <Navigate to="/Login" />;
+      }
+    
+
+  if (loading) {
+    return <h1>Loading...</h1>; 
+  }
+
+  
+  if (!localStorage.getItem('loggedIn')) {
+    return <Navigate to="/Login" replace />;
+  }
+
+  return children; 
 };
 
 export default Protected;

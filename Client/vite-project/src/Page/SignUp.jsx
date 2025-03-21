@@ -1,10 +1,12 @@
-import React,{useState  } from 'react'
+import React,{useState ,useEffect  } from 'react'
 import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import bcrypt from 'bcryptjs';
 const saltRounds = 10;
 import axios from 'axios';
 
 function SignUp() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     FirstName: '',
     LastName: '',
@@ -12,6 +14,13 @@ function SignUp() {
     Email: '',
     Password: '',
   });
+
+ useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate('/');
+        }
+    }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value} = e.target;
@@ -29,6 +38,7 @@ function SignUp() {
     await axios.post('http://localhost:5000/Profile/Signup/', data)
         .then((res)=>{
            console.log(res)
+           navigate('/login');
         })
         .catch((err)=>{
           console.log(err)

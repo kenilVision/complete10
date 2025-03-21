@@ -1,103 +1,27 @@
 import React, { useEffect } from 'react'
-import { useSelector, useDispatch} from 'react-redux'
-import {ReadFromDB}  from '../../Slice/UserSlice.js'
-import {updateProfileFieldEdit} from '../../Slice/FormSlice';
-import {toggleModal} from '../../Slice/modal.js'
-import {resetQuery,total} from '../../Slice/Queries'
 import CommonTable from '../Common/CommonTable.jsx';
 import axiosInstance from '../../axios/axios.js';
 
-function Table() {
-    
-    const profile = useSelector(state => state.user)
-    const dispatch = useDispatch();
-    const quries =  useSelector(state => state.queries)
+function Table({formloader,formSetter,user,getuser,queries,resetQuery }) {
+    const tableField = ["Profile Pic", 'Firstname' ,"Lastname" ,"Email"," Mobilenumber","Gender","Hobbies","Action"]
+
      useEffect(()=>{
-        const fetchData = async () => {
-            try {
-            const queryString = new URLSearchParams(quries).toString();
-            const response = await axiosInstance.get(`/User?${queryString}`);
-      
-              const formattedData = response.data.user.map((user) => {
-                return {
-                  _id: user._id,
-                  FirstName: user.FirstName,
-                  LastName: user.LastName,
-                  Email: user.Email,
-                  MobileNumber: user.MobileNumber,
-                  Hobbies: user.Hobbies,
-                  Gender: user.Gender,
-                  filename: user.url,
-                };
-              });
-              dispatch(total(response.data.totalPages))
-              dispatch(ReadFromDB(formattedData));
-            } catch (error) {
-              console.error('Error fetching user data:', error);
-            }
-          };
-      
-          fetchData();
-     },[dispatch , quries.page ,quries.sort ,quries.search ])
-
-    
-    
-     const editloader =  async (id) =>{
-        try{
-            
-            const response = await axiosInstance.get(`/User/${id}`);
-            const formattedData =  {
-                  _id: response.data._id,
-                  FirstName: response.data.FirstName,
-                  LastName: response.data.LastName,
-                  Email: response.data.Email,
-                  MobileNumber: response.data.MobileNumber,
-                  Hobbies: response.data.Hobbies,
-                  Gender: response.data.Gender,
-                }
-                console.log(formattedData)
-                dispatch(updateProfileFieldEdit(formattedData))
-                dispatch(toggleModal())
-              
-        }
-        catch(err){
-            console.error('Error deleting user:', err);
-        }
-
-     }
-
+         getuser()
+     },[ queries.page ,queries.sort ,queries.search ])
 
      const del = async (_id) => {
         try {
             await axiosInstance.delete(`/User/${_id}`);  
-
-            const response = await axiosInstance.get('cd/user');
-      
-              const formattedData = response.data.user.map((user) => {
-                return {
-                  _id: user._id,
-                  FirstName: user.FirstName,
-                  LastName: user.LastName,
-                  Email: user.Email,
-                  MobileNumber: user.MobileNumber,
-                  Hobbies: user.Hobbies,
-                  Gender: user.Gender,
-                  filename: user.url,
-                };
-              });
-              dispatch(resetQuery())
-              dispatch(total(response.data.totalPages))
-              dispatch(ReadFromDB(formattedData));
-           
+            resetQuery()
+            getuser()
         } catch (error) {
             console.error('Error deleting user:', error);
         }
     };
     
-    const tableField = ["Profile Pic", 'Firstname' ,"Lastname" ,"Email"," Mobilenumber","Gender","Hobbies","Action"]
-
+    
     return (
-        
+
         <CommonTable
             header = {tableField.map((x)=>{
                 return ( <th scope="col" className="px-6 py-3">
@@ -105,7 +29,7 @@ function Table() {
                  </th>)
             })}
             
-            body={profile.map((user)=>(
+            body={user.map((user)=>(
                         
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" key={user._id}>
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -136,7 +60,7 @@ function Table() {
                     <button
                     className="p-0 text-gray-600 hover:text-gray-800 "
                     type="button"
-                    onClick={() => editloader(user._id)}
+                    onClick={() => formloader(user._id)}
                     >
                     <span className="">
                         <svg
@@ -173,9 +97,9 @@ function Table() {
                     </td>
                 </tr>
             ))
+            
             } 
         />
-        
         
     )
 }

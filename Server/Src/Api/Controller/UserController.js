@@ -72,7 +72,7 @@ exports.AddUserInfo = async (req, res) => {
         }
 
         if (!MobileNumber || isNaN(MobileNumber)) {
-            return res.status(400).send({ message: "Valid Mobile Number is required" });
+            return res.status(400).send({ message: "Valid Mobile Number is required" ,flag:2 });
         }
 
         if (!req.file) {
@@ -93,13 +93,6 @@ exports.AddUserInfo = async (req, res) => {
         res.status(200).send(data);
     } catch (error) {
         console.error("Error adding user info:", error);
-
-        
-        if (error.code === 11000) {
-            console.log(req.body);
-            return res.status(409).send({ message: "Email already exists" });
-        }
-
         res.status(500).send({ message: "Fail to add data" });
     }
 };
@@ -126,13 +119,24 @@ exports.UpdateUserInfo = async (req, res) => {
         let updateData = { ...req.body };
         if (req.file) {
             updateData.filename = req.file.filename;
-            const oldFilePath = path.join(__dirname, '../../uploads', userData.filename);
-
-
-             if (await fs.promises.stat(oldFilePath).catch(() => false)) {
-                await fs.promises.unlink(oldFilePath);
+        
+            if (userData.filename) {  
+                const oldFilePath = path.join(__dirname, '../../../Upload', userData.filename);
+        
+              
+                fs.unlink(oldFilePath, function (err) {
+                    if (err) {
+                        if (err.code === 'ENOENT') {
+                            console.log('Old file not found, nothing to delete.');
+                        } else {console.error('Error deleting the old file:', err);}
+                    } 
+                    else {
+                        console.log('Old file deleted successfully.');
+                    }
+                });
             }
         }
+        
 
         const updatedData = await model.findByIdAndUpdate(id, updateData, { new: true });
 
@@ -166,12 +170,20 @@ exports.DeleteUserInfo = async (req, res) => {
             return res.status(404).send({ message: "No data found" });
         }
 
-        const filePath = path.join(__dirname, '../../uploads', userData.filename); 
-
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);  
-        }
-
+        const filePath = path.join(__dirname,'../../../Upload',userData.filename);
+        fs.unlink(filePath, function (err) {
+                if (err) {
+                    if (err.code === 'ENOENT') {
+                        console.log( err + 'Old file not found, nothing to delete.');
+                    } else {console.error('Error deleting the old file:', err);}
+                } 
+                else {
+                    console.log('Old file deleted successfully.');
+                }
+            });
+        
+            
+        
         await model.findByIdAndDelete(id);
 
         res.status(200).send({ message: "User and file deleted successfully", userData });

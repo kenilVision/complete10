@@ -1,45 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../axios/axios";
 
-// Move the asynchronous logic outside the reducers
-export const ReadFromDB = () => async (dispatch) => {
-    try {
-        const token = localStorage.getItem('token');
-        const res = await axiosInstance.get('/Profile');
-        console.log(res)
-        dispatch(setProfile({
-            _id: res.data._id,
-            FirstName: res.data.FirstName,
-            LastName: res.data.LastName,
-            email: res.data.Email,
-            MobileNumber: res.data.MobileNumber,
-        }));
-    } catch (err) {
-        console.log(err);
-    }
-};
+export const ReadFromDB = createAsyncThunk("ReadFromDB", async () => {
+    const res = await axiosInstance.get('/Profile');
+    return res.data;
+});
 
 const ProfileSlice = createSlice({
     name: 'Profile',
     initialState: {
+        loading: false,
         _id: 'Guest',
         FirstName: '',
         LastName: '',
-        email: '',
+        Email: '',
         MobileNumber: '',
     },
-    reducers: {
-        // Define a synchronous action to update the state
-        setProfile: (state, action) => {
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(ReadFromDB.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(ReadFromDB.fulfilled, (state, action) => {
+            state.loading = false;
             state._id = action.payload._id;
             state.FirstName = action.payload.FirstName;
             state.LastName = action.payload.LastName;
-            state.email = action.payload.email;
+            state.Email = action.payload.Email;
             state.MobileNumber = action.payload.MobileNumber;
-        }
+        });
+        builder.addCase(ReadFromDB.rejected, (state, action) => {
+            state.loading = false;
+            console.error("Error", action.error.message);
+        });
     }
 });
-
-export const { setProfile } = ProfileSlice.actions;
 
 export default ProfileSlice.reducer;

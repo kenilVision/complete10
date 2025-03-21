@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {  Routes, Route } from "react-router-dom";
 import Navbar from './Layout/Navbar';
 import Login from './Page/Login';
 import Profile from './Page/Profile';
@@ -10,18 +10,37 @@ import { Provider } from 'react-redux';
 import store from './Store/Store';
 import Protected from './ProtectedWrapper/Protected';
 function App() {
+
+
+  const routes = [
+    {
+      path: '/',
+      element: <Protected><Navbar /><Home /></Protected>
+    },
+    {
+      path: '/About',
+      element: <Protected><Navbar /><About /></Protected>
+    },
+    {
+      path: '/Profile',
+      element: <Protected><Navbar /><Profile /></Protected>
+    },
+    {
+      path: '/Login',
+      element: <Login />
+    },
+    {
+      path: '/SignUp',
+      element: <SignUp />
+    }
+  ];
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <Navbar />
         <Routes>
-          <Route path="/" element={<Protected><Home /></Protected>} />
-          <Route path="/About" element={<About />} />
-          <Route path="/Profile" element={<Protected><Profile /></Protected>} />
-          <Route path="/Login" element={<Login />} />
-          <Route path='/SignUp' element={<SignUp />} />
+        {routes.map((route, i) => (
+            <Route key={i} path={route.path} element={route.element} />
+          ))}
         </Routes>
-      </BrowserRouter>
     </Provider>
   );
 }
