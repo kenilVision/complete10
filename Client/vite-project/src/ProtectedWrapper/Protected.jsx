@@ -39,7 +39,7 @@ const Protected = ({ children }) => {
   const currentTime = new Date().getTime();
 
   
-  if (loginTime && currentTime - loginTime > 10 * 1000) {
+  if (loginTime && currentTime - loginTime > 60 * 60 * 1000) {
         localStorage.clear();
         return <Navigate to="/Login" />;
       }

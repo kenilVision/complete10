@@ -1,45 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import {ReadFromDB} from '../Slice/ProfileSlice'
-import axiosInstance from '../axios/axios';
+import { useNavigate } from 'react-router-dom'
+import { getLogin } from '../Api/Profile';
+
 
 function Login() {
-    const navigate = useNavigate();
     const [Credential, SetCredential] = useState({
         Email: "", 
         Password: "" 
     });
 
     const dispatch = useDispatch()
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            navigate('/');
-        }
-    }, [navigate]);
-
+    const navigate = useNavigate()
 
     function Handler(e) {
         const { name, value } = e.target;
         SetCredential({ ...Credential, [name]: value.trim() }); 
     }
 
-    async function SubmitHandler  (e) {
+  function SubmitHandler(e) {
         e.preventDefault();
-        await axiosInstance.post('/Profile/login/', Credential)
-            .then(res => {
-                console.log(res                
-                )
+       getLogin(Credential)
+            .then(res => {  
                 const token = res.data.token;
+                localStorage.setItem('token', JSON.stringify(token));
                 const loginTime = new Date().getTime();
                 localStorage.setItem('loginTime', loginTime);
-                localStorage.setItem('token', JSON.stringify(token));
-                localStorage.setItem('loggedIn',JSON.stringify(true))
+                localStorage.setItem('loggedIn', JSON.stringify(true));
                 dispatch(ReadFromDB())
                 navigate('/');
+
             })
             .catch(err => console.log(err));
     }

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import Table from '../Component/Home/Table'
 import Modal from '../Component/Home/Modal'
 import Search from '../Component/Home/Search'
 import Page from '../Component/Home/Page'
-import axiosInstance from '../axios/axios'
+import { getSingleUser , putUser ,postUser ,getUser } from '../Api/User'
+
 
 
 function Home() {
@@ -40,7 +41,7 @@ function Home() {
     const formloader =  async (id) =>{
       try{
           
-          const response = await axiosInstance.get(`/User/${id}`);
+          const response = await getSingleUser(id)
           const formattedData =  {
                 _id: response.data._id,
                 FirstName: response.data.FirstName,
@@ -128,17 +129,10 @@ function Home() {
     try {
 
       if (form._id) {
-        await axiosInstance.put('/User', formDataToSubmit, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        });
+        await putUser(formDataToSubmit)
+
       } else {
-        await axiosInstance.post('/User', formDataToSubmit, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        });
+        await postUser(formDataToSubmit);
       }
   
 
@@ -163,7 +157,7 @@ function Home() {
   const getuser = async () => {
     try {
       const queryString = new URLSearchParams(queries).toString();
-      const response = await axiosInstance.get(`/User?${queryString}`);
+      const response = await getUser(queryString);
         const formattedData = response.data.user.map((user) => {
           return {
             _id: user._id,
@@ -176,7 +170,7 @@ function Home() {
             filename: user.url,
           };
         });
-        setTotal(response.data.totalPages)
+        setTotal(response.data.totalPages||0)
         setuser(formattedData);
       } catch (error) {
         console.error('Error fetching user data:', error);

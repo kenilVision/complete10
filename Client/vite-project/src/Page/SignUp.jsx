@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import bcrypt from 'bcryptjs';
 const saltRounds = 10;
-import axios from 'axios';
+import { setProfile } from '../Api/Profile';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ function SignUp() {
     const hashpassword = await bcrypt.hash(formData.Password, saltRounds);
     const data = {...formData , Password: hashpassword }
     console.log(data);
-    await axios.post('http://localhost:5000/Profile/Signup/', data)
+    await setProfile(data)
         .then((res)=>{
            console.log(res)
            navigate('/login');

@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../axios/axios";
+import { getProfile } from "../Api/Profile";
 
 export const ReadFromDB = createAsyncThunk("ReadFromDB", async () => {
-    const res = await axiosInstance.get('/Profile');
-    return res.data;
+            const data = await getProfile()
+            return data
 });
 
 const ProfileSlice = createSlice({
