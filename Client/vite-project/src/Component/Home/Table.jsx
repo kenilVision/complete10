@@ -58,7 +58,7 @@ function Table({formloader,formSetter,user,getuser,queries,resetQuery }) {
                     </td>
                     <td className="px-6 py-4">
                     <button
-                    className="p-0 text-gray-600 hover:text-gray-800 "
+                    className="p-2 text-yellow-600 hover:text-yellow-800 hover:bg-gray-700 me-1 rounded-xl"
                     type="button"
                     onClick={() => formloader(user._id)}
                     >
@@ -77,7 +77,7 @@ function Table({formloader,formSetter,user,getuser,queries,resetQuery }) {
                     </button>
 
                     <button
-                    className="p-0 text-gray-600 hover:text-gray-800 "
+                    className="p-2 text-red-600 hover:text-red-800  hover:bg-gray-700 rounded-xl "
                     onClick={() => del(user._id)}
                     >
                     <span className="">

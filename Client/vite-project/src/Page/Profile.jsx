@@ -10,7 +10,7 @@ function Profile() {
   }
   else{
     return (
-      <section className="bg-gray-50 min-h-screen dark:bg-gray-900 ">
+      <section className="bg-gray-50 min-h-screen dark:bg-gray-900 w-full ">
       <div className="flex flex-col items-center  px-6 py-8 mx-auto min-h-screen w-full lg:py-0">
         <div className="w-full max-w-lg bg-white rounded-lg shadow dark:border  dark:bg-gray-800 dark:border-gray-700 mt-10  ">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

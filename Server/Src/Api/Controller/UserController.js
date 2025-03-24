@@ -71,7 +71,11 @@ exports.AddUserInfo = async (req, res) => {
             return res.status(400).send({ message: "Email is required" });
         }
 
-        if (!MobileNumber || isNaN(MobileNumber)) {
+        if (!MobileNumber || isNaN(MobileNumber) ) {
+            return res.status(400).send({ message: "Valid Mobile Number is required" ,flag:2 });
+        }
+        if (MobileNumber.toString().length != 10 ) {
+            console.log(MobileNumber.toString().length)
             return res.status(400).send({ message: "Valid Mobile Number is required" ,flag:2 });
         }
 
