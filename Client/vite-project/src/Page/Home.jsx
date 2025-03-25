@@ -1,14 +1,15 @@
 import React, {  useState } from 'react'
 import Table from '../Component/Home/Table'
-import Modal from '../Component/Home/Modal'
 import Search from '../Component/Home/Search'
 import Page from '../Component/Home/Page'
 import { getSingleUser , putUser ,postUser ,getUser } from '../Api/User'
 
 
 
+
 function Home() {
 
+  const [mode,setmode] = useState(true)
   const [modal,setmodel] = useState(false)
   
   const [queries, setQueries] = useState({
@@ -53,6 +54,8 @@ function Home() {
               }
               setfrom(formattedData)
               setmodel(!modal)
+              setmode(false)
+              
       }
       catch(err){
           console.error('Error deleting user:', err);
@@ -103,6 +106,7 @@ function Home() {
       Gender: '',
       file:null
       })
+      setmode(true)
     
   };
 
@@ -117,31 +121,31 @@ function Home() {
     formDataToSubmit.append('Hobbies', JSON.stringify(form.Hobbies));
     formDataToSubmit.append('Gender', form.Gender);
   
-  
     if (form._id && form._id.trim() !== '') {
       formDataToSubmit.append('_id', form._id);
     }
   
-
     if (form.file) {
       formDataToSubmit.append('file', form.file);
     }
+  
     try {
-
+     
       if (form._id) {
-        await putUser(formDataToSubmit)
-
+        await putUser(formDataToSubmit); 
       } else {
-        await postUser(formDataToSubmit);
+        await postUser(formDataToSubmit); 
       }
   
-
-      setmodel(!modal);
-      resetForm();
-      resetQuery(); 
-      getuser(); 
-  
+      
+      setmodel(!modal); 
+      resetForm();      
+      resetQuery();     
+      getuser();        
     } catch (error) {
+      console.log("Error:", error);
+
+      
       if (error.response?.data?.flag === 1) {
         alert("Email already exists");
       } else if (error.response?.data?.flag === 2) {
@@ -149,8 +153,11 @@ function Home() {
       } else {
         console.error("Error submitting form data:", error.response?.data);
       }
+  
+     
     }
   };
+  
   
   
 /////// USER  
@@ -217,16 +224,14 @@ const setField = ({ name, value }) => {
     //queries
   return (
     <>
-    <section className="bg-gray-50 dark:bg-gray-900 h-screen w-full">
-      <div className="flex flex-col items-center  px-6 py-8 border-0  mx-auto min-h-screen w-full lg:py-0">
-        <Search queries ={queries} setField={setField} />
-        <div className="w-full max-w-xxl bg-white rounded-lg shadow  mb-5   dark:bg-gray-800 dark:border-gray-700 mt-10  ">
+    <section className="bg-gray-50 dark:bg-gray-900 h-auto w-full">
+      <div className="flex flex-col items-center   border-0  mx-auto min-h-screen w-full ">
+        <Search queries ={queries} setField={setField}  modal={modal}setmodel={setmodel} form={form} setform={setfrom} resetForm={resetForm} updateForm={updateForm} Submitform={Submitform} mode={mode} setmode={setmode}/>
+        <div className="w-full max-w-7xl bg-white rounded-lg shadow  py-4   dark:bg-gray-900 dark:border-gray-700   ">
           <Table modal={modal}setmodel={setmodel} form={form} setform={setfrom} user={user} getuser={getuser} formloader={formloader} queries ={queries} resetQuery={resetQuery}/>
         </div>
-        <div className='flex w-5xl'>
-          <div className='ml-auto'></div>
+        <div className=' w-7xl py-4'>
           <Page queries ={queries} setPage={setPage} />
-          <Modal modal={modal}setmodel={setmodel} form={form} setform={setfrom} resetForm={resetForm} updateForm={updateForm} Submitform={Submitform}/> 
         </div>
        </div>
     </section>

@@ -24,7 +24,7 @@ function Table({formloader,formSetter,user,getuser,queries,resetQuery }) {
 
         <CommonTable
             header = {tableField.map((x)=>{
-                return ( <th scope="col" className="px-6 py-3">
+                return ( <th scope="col" className="px-4 py-3">
                     {x}
                  </th>)
             })}
@@ -32,31 +32,31 @@ function Table({formloader,formSetter,user,getuser,queries,resetQuery }) {
             body={user.map((user)=>(
                         
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" key={user._id}>
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <th scope="row" className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     <div className="rounded  ">
                         <img src={user.filename} alt="profile" className="h-12 w-12 rounded-full" />
                     </div>
                     </th>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">
                         {user.FirstName}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">
                         {user.LastName}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">
                         {user.Email}
                     </td>
                     
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">
                     {user.MobileNumber}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">
                         {user.Gender}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">
                         {JSON.parse(user.Hobbies).join(" ,")}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 ` py-2">
                     <button
                     className="p-2 text-yellow-600 hover:text-yellow-800 hover:bg-gray-700 me-1 rounded-xl"
                     type="button"

@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate ,useLocation } from 'react-router-dom';
+import { Navigate  } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ReadFromDB } from '../Slice/ProfileSlice';
 
 const Protected = ({ children }) => {
   const profile = useSelector((state) => state.profile);
   const dispatch = useDispatch();
-  const location = useLocation(); 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const verifyToken = async () => {
       const token = localStorage.getItem('token');
-      const loggedIn = localStorage.getItem('loggedIn');
-      
-      if (!token || !loggedIn) {
+      if (!token ) {
         setLoading(false); 
         return;
       }
@@ -35,22 +32,13 @@ const Protected = ({ children }) => {
     }
   },[]);
 
-  const loginTime = localStorage.getItem('loginTime');
-  const currentTime = new Date().getTime();
-
-  
-  if (loginTime && currentTime - loginTime > 60 * 60 * 1000) {
-        localStorage.clear();
-        return <Navigate to="/Login" />;
-      }
-    
 
   if (loading) {
     return <h1>Loading...</h1>; 
   }
 
   
-  if (!localStorage.getItem('loggedIn')) {
+  if (!localStorage.getItem('token')) {
     return <Navigate to="/Login" replace />;
   }
 

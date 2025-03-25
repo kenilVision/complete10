@@ -1,4 +1,4 @@
-const profile = require("../../DB/ProfileModel")
+const profile = require("../../modal/ProfileModel")
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
@@ -31,7 +31,7 @@ exports.SignUp = async (req, res) =>{
             res.status(200).send(data)
     }
     catch{
-        res.Status(500).send({message:"fail to add data"})
+        res.status(500).send({message:"fail to add data"})
     }   
 
 }
@@ -60,6 +60,6 @@ exports.Login = async (req, res) =>{
 
         } catch (error) {
             console.error("Error in login API:", error);
-            return res.status(500).send({ message: "Internal Server Error" });
+             res.status(500).send({ message: "Internal Server Error" });
         }
 }

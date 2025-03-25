@@ -19,5 +19,18 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      if (error.response.data.flag === 1000) {
+        console.error('Unauthorized, redirecting to login...');
+        window.location.href = '/login'; 
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 export default axiosInstance;

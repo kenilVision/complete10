@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getProfile } from "../Api/Profile";
 
+
 export const ReadFromDB = createAsyncThunk("ReadFromDB", async () => {
             const data = await getProfile()
             return data

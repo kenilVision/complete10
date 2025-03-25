@@ -8,14 +8,15 @@ const Auth = async (req,res,next) =>{
         const token = req.headers['authorization']?.replace(/"/g, '').trim();   
         console.log(token)
         if (!token) {
-            return res.status(403).send({ message: 'No token provided' });
+            return res.status(403).send({ message: 'No token provided', flag:1000 });
         }
         console.log(token)
          jwt.verify(token, Secret_Key, (err, decoded) => {
                 if (err) {
                     return res.status(400).send(
                     { message:  'Unauthorized',
-                      err:err 
+                      err:err ,
+                      flag:1000
                     });
                 }
                 req._id = decoded.id;

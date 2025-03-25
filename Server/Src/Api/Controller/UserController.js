@@ -1,4 +1,4 @@
-const model = require("../../DB/UserModel")
+const model = require("../../modal/UserModel")
 const fs = require('fs')
 const path = require('path')
 
@@ -51,7 +51,6 @@ exports.UserInfo = async (req, res) => {
             ...data.toObject(),  
             url: `http://localhost:5000/uploads/${data.filename}` 
         };
-
         res.status(200).json(NewData);
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -68,6 +67,7 @@ exports.AddUserInfo = async (req, res) => {
         const { MobileNumber, Email } = req.body;
 
         if (!Email || Email.trim() === '') {
+            console.log(MobileNumber.toString().length)
             return res.status(400).send({ message: "Email is required" });
         }
 
@@ -96,8 +96,12 @@ exports.AddUserInfo = async (req, res) => {
 
         res.status(200).send(data);
     } catch (error) {
+        if(error.code === 11000 ) {
+
+           return  res.status(400).send({ message: 'Email already exists' , flag:1 });
+          } 
         console.error("Error adding user info:", error);
-        res.status(500).send({ message: "Fail to add data" });
+        return res.status(500).send({ message: "Fail to add data" });
     }
 };
 
@@ -118,6 +122,11 @@ exports.UpdateUserInfo = async (req, res) => {
             if (emailExists) {
                 return res.status(400).send({ message: "Email is already in use by another user" });
             }
+        }
+
+        if (req.body.MobileNumber.toString().length != 10 ) {
+            console.log(req.body.MobileNumber.toString().length)
+            return res.status(400).send({ message: "Valid Mobile Number is required" ,flag:2 });
         }
 
         let updateData = { ...req.body };
@@ -157,8 +166,12 @@ exports.UpdateUserInfo = async (req, res) => {
             res.status(404).send({ message: "No data found" });
         }
     } catch (error) {
+        if(error.code === 11000 ) {
+
+            return  res.status(400).send({ message: 'Email already exists' , flag:1 });
+           } 
         console.error('Error updating user info:', error);
-        res.status(500).send({ message: "API failed", error: error.message });
+        return res.status(500).send({ message: "API failed", error: error.message });
     }
 };
 

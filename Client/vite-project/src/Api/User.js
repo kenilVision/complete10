@@ -8,7 +8,7 @@ export const getSingleUser = async (id) =>{
     }
     catch (error) {
         console.error('Error fetching profile:', error);
-        throw error;
+        return error;
     }
 
 }
@@ -21,7 +21,7 @@ export const getUser = async (queryString) =>{
     }
     catch (error) {
         console.error('Error fetching profile:', error);
-        throw error;
+        return  error;
     }
 
 }
