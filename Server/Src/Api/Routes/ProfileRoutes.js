@@ -10,4 +10,4 @@ routes.post("/login",ProfileController.Login )
 module.exports = routes;
 
 
-// completed basic FE BE application ,set nav bar set up with routing, redux flow setup, working on BE profile ADD and Authentication
+// for profile route

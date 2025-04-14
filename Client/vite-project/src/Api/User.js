@@ -1,6 +1,6 @@
 import axiosInstance from "../axios/axios";
-
-export const getSingleUser = async (id) =>{
+// all api calls for managing users
+export const getSingleUser = async (id) =>{    // to get all user
 
     try{
         const res = await axiosInstance.get(`/User/${id}`);
@@ -13,7 +13,7 @@ export const getSingleUser = async (id) =>{
 
 }
 
-export const getUser = async (queryString) =>{
+export const getUser = async (queryString) =>{    // to get one user
 
     try{
         const res = await axiosInstance.get(`/User?${queryString}`);
@@ -27,7 +27,7 @@ export const getUser = async (queryString) =>{
 }
 
 
-export const putUser = async (formDataToSubmit) => {
+export const putUser = async (formDataToSubmit) => {    // to edit one user
     try {
         const res = await axiosInstance.put('/User', formDataToSubmit, {
             headers: { 'Content-Type': 'multipart/form-data' }
@@ -39,7 +39,7 @@ export const putUser = async (formDataToSubmit) => {
     }
 }
 
-export const postUser = async (formDataToSubmit) => {
+export const postUser = async (formDataToSubmit) => {    // to add one user
     try {
         const res = await axiosInstance.post('/User', formDataToSubmit, {
             headers: { 'Content-Type': 'multipart/form-data' }

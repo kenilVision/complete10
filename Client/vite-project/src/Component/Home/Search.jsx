@@ -1,12 +1,18 @@
 import React from 'react';
 import Modal from './Modal'
 import Input from '../Common/Input'
+
+
+// search sort and add user button bar
+
 function Search_Sort({queries ,setField , modal, setmodel , form , resetForm,updateForm,Submitform,mode ,setmode}) {
   return (
 
    <nav className="bg-gray-900 w-full p-4">
     <div className="mx-auto max-w-7xl  flex  ">
       <div className='pe-2' >
+
+        // search
         <Input
           className="form-input bg-gray-700  text-white px-4 py-2 border border-[#30363D] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           type="search"
@@ -16,7 +22,7 @@ function Search_Sort({queries ,setField , modal, setmodel , form , resetForm,upd
          onChange={(e)=>{setField(e.target)}}
         />
         </div>
-
+        // sort
         <div>
       <select
        className="form-select bg-gray-700 text-white px-4 py-2 border border-[#30363D] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 appearance-none relative"
@@ -27,6 +33,8 @@ function Search_Sort({queries ,setField , modal, setmodel , form , resetForm,upd
         <option value="Email">Email</option>
       </select>
       </div>
+
+      // add user
       <div className='ms-auto'>
         <Modal modal={modal} setmodel={setmodel} form={form}  resetForm={resetForm} updateForm={updateForm} Submitform={Submitform} mode={mode}  setmode={setmode} />
       </div>

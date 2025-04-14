@@ -1,16 +1,16 @@
 import axiosInstance from "../axios/axios";
-
-export const getProfile = async () => {
+// all api calls for profiel of user
+export const getProfile = async () => {      //to get detail
     try {
         const res = await axiosInstance.get('/Profile');
         return res.data;
     } catch (error) {
         console.error('Error fetching profile:', error);
-        return error;
+        throw error;
     }
 }
-
-export const setProfile = async (data) => {
+ 
+export const setProfile = async (data) => {    //to set detail or sign up
     try {
         const res = await axiosInstance.post('/Profile/Signup/', data);
         return res;
@@ -20,7 +20,7 @@ export const setProfile = async (data) => {
     }
 }
 
-export const getLogin = async (Credential) => {
+export const getLogin = async (Credential) => {   // to log in 
     try {
         const res = await axiosInstance.post('/Profile/login/', Credential);
         return res;

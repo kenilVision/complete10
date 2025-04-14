@@ -4,7 +4,7 @@ function Detail() {
 
     const profile = useSelector(state => state.profile)
 
-   
+   // normal page for user detail
   return (
     <section className="bg-gray-50 min-h-screen dark:bg-gray-900 w-full ">
     <div className="flex flex-col items-center  px-6 py-8 mx-auto min-h-screen w-full lg:py-0">

@@ -5,7 +5,7 @@ const Auth = async (req,res,next) =>{
 
     try{
 
-        const token = req.headers['authorization']?.replace(/"/g, '').trim();   
+        const token = req.headers['authorization']?.replace(/"/g, '').trim();    
         console.log(token)
         if (!token) {
             return res.status(403).send({ message: 'No token provided', flag:1000 });
@@ -16,11 +16,12 @@ const Auth = async (req,res,next) =>{
                     return res.status(400).send(
                     { message:  'Unauthorized',
                       err:err ,
-                      flag:1000
+                      flag:1000                                             // jwt auth fail then flag 1000
                     });
                 }
                 req._id = decoded.id;
-                next();
+                next();                                                       //route to next page
+
         });
         
     }

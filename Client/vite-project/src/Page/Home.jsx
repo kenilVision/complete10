@@ -8,11 +8,10 @@ import { getSingleUser , putUser ,postUser ,getUser } from '../Api/User'
 
 
 function Home() {
-
-  const [mode,setmode] = useState(true)
-  const [modal,setmodel] = useState(false)
-  
-  const [queries, setQueries] = useState({
+//all states required 
+  const [mode,setmode] = useState(true)     // for controlling mode of model add or edit
+  const [modal,setmodel] = useState(false) // for controlling  model
+  const [queries, setQueries] = useState({        // for controlling query to pass while geting data
     total: 0,
     page: 1,
     limit: 5,
@@ -20,7 +19,7 @@ function Home() {
     sort: "",
   });
 
-  const [form,setfrom] = useState({
+  const [form,setfrom] = useState({         // to manage data in form in modal
     _id:'',
     FirstName: '',
     LastName: '',
@@ -31,13 +30,13 @@ function Home() {
     file:null
     })
 
-    const [user ,setuser] = useState([])
+    const [user ,setuser] = useState([])    // all user  which are visible on screen and total pages
 
 
 
 
     
-//// FORM 
+//// FORM  functionalaties
 
     const formloader =  async (id) =>{
       try{
@@ -145,7 +144,7 @@ function Home() {
     } catch (error) {
       console.log("Error:", error);
 
-      
+
       if (error.response?.data?.flag === 1) {
         alert("Email already exists");
       } else if (error.response?.data?.flag === 2) {
@@ -160,7 +159,7 @@ function Home() {
   
   
   
-/////// USER  
+/////// USER   functionalaties
   const getuser = async () => {
     try {
       const queryString = new URLSearchParams(queries).toString();
@@ -185,7 +184,7 @@ function Home() {
   }
 
 
-/////Queries 
+/////Queries  functionalaties
 
 const setField = ({ name, value }) => {
   setQueries((prevState) => ({
@@ -221,7 +220,7 @@ const setField = ({ name, value }) => {
       }));
     };
     
-    //queries
+  
   return (
     <>
     <section className="bg-gray-50 dark:bg-gray-900 h-auto w-full">

@@ -5,7 +5,7 @@ require('dotenv').config();
 const SECRET = process.env.SECRET_KEY;
 
 
-exports.ProfileInfo = async (req, res) =>{
+exports.ProfileInfo = async (req, res) =>{                                           // getting user info
     try{
         
             const id = await req._id
@@ -23,7 +23,7 @@ exports.ProfileInfo = async (req, res) =>{
         }
 }
 
-exports.SignUp = async (req, res) =>{
+exports.SignUp = async (req, res) =>{                                                // signup user
     try{
             const data = await profile(req.body) 
             data.MobileNumber = parseInt(data.MobileNumber, 10);
@@ -36,7 +36,7 @@ exports.SignUp = async (req, res) =>{
 
 }
 
-exports.Login = async (req, res) =>{
+exports.Login = async (req, res) =>{                                                   //login user
     try {
 
                     const { Email, Password } = req.body;

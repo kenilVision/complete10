@@ -9,7 +9,7 @@ import Input from '../Common/Input'
 function SignupDetail() {
 
     const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({  // state to manage signup
     FirstName: '',
     LastName: '',
     MobileNumber: '',
@@ -17,14 +17,14 @@ function SignupDetail() {
     Password: '',
   });
 
- useEffect(() => {
+ useEffect(() => {                                          // if has token then move to home
         const token = localStorage.getItem('token');
         if (token) {
             navigate('/');
         }
     }, [navigate]);
 
-  const handleChange = (e) => {
+  const handleChange = (e) => {                             // function to  handle change in form
     const { name, value} = e.target;
     setFormData({
       ...formData,
@@ -32,7 +32,7 @@ function SignupDetail() {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async(e) => {                      // function to handle submit in form 
     e.preventDefault();
     const hashpassword = await bcrypt.hash(formData.Password, saltRounds);
     const data = {...formData , Password: hashpassword }

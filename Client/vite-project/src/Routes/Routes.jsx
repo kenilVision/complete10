@@ -6,7 +6,7 @@ import Login from '../Page/Login';
 import SignUp from '../Page/SignUp';
 
 
-export const protectedRoute = [
+export const protectedRoute = [    // routs which can only be acces by user
     {
         path: '/',
         element: (
@@ -33,7 +33,7 @@ export const protectedRoute = [
     }
 ];
 
-export const publicRoute = [
+export const publicRoute = [    //routes sccess by all 
     { 
         path: '/login',
          element: <Login /> 

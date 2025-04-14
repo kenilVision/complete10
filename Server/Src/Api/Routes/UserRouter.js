@@ -11,3 +11,6 @@ routes.put("/",Auth,upload.single('file'),controller.UpdateUserInfo)
 routes.delete("/:id",Auth,controller.DeleteUserInfo)
 
 module.exports = routes;    
+
+
+// for user route

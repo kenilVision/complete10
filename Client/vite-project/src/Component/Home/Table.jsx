@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import CommonTable from '../Common/CommonTable.jsx';
 import axiosInstance from '../../axios/axios.js';
 
+// table show on home page 
 function Table({formloader,formSetter,user,getuser,queries,resetQuery }) {
     const tableField = ["Profile Pic", 'Firstname' ,"Lastname" ,"Email"," Mobilenumber","Gender","Hobbies","Action"]
 

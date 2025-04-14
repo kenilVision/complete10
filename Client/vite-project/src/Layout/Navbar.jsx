@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { NavLink } from 'react-router-dom';
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react' 
 import { Bars3Icon,  XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
@@ -21,7 +20,7 @@ const navigation = [
     text:"Profile",
     
     }
-]
+]  // data of nav bar 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -44,11 +43,11 @@ function Navbar() {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="hidden  sm:block">
               <div className="flex space-x-4">
-                {navigation.map((x, i) => {
+                {navigation.map((x, i) => {     // maopping all nav item 
                   
                   return (
                         
-                    <NavLink
+                    <NavLink      
                         to={x.to}
                         className={classNames(
                               x.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',

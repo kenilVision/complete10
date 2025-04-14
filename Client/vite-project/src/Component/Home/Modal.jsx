@@ -4,6 +4,8 @@ import Input from '../Common/Input'
 import CommonModal from '../Common/CommonModal'
 const ModalComponent = ({modal,setmodel , form , resetForm,updateForm,Submitform,mode }) => {
 
+// modal for add and edit user 
+
 
 return (
 <CommonModal

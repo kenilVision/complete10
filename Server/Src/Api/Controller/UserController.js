@@ -4,7 +4,7 @@ const path = require('path')
 
 
 
-exports.UsersInfo = async (req, res) => {
+exports.UsersInfo = async (req, res) => {                             // get all user
     try {
         const page =  Number(req.query.page) || 1 ;
         const limit = Number(req.query.limit) || 3;
@@ -18,14 +18,14 @@ exports.UsersInfo = async (req, res) => {
                 { "Email": { $regex: search, $options: 'i' } }    
             ]
         };
-        const totalItems = await model.countDocuments(query);
-
+        const totalItems = await model.countDocuments(query);     // till  here logic for query
+                
         let data;
         if (sort) {
             data = await model.find(query).sort(sort).skip(skip).limit(limit);
         } else {
             data = await model.find(query).skip(skip).limit(limit);
-        }
+        }                                                                                               //calling data
         const NewData = data.map(profile => ({...profile.toObject(),
             url: `http://localhost:5000/uploads/${profile.filename}`
           }));
@@ -33,7 +33,7 @@ exports.UsersInfo = async (req, res) => {
             res.status(200).send({
                 totalPages: Math.ceil(totalItems / limit),
                 user: NewData
-              });
+              });                                                                           
         } else {
             res.status(404).send({ message: "No data found" });
         }
@@ -43,7 +43,7 @@ exports.UsersInfo = async (req, res) => {
     }
 };
 
-exports.UserInfo = async (req, res) => {
+exports.UserInfo = async (req, res) => {                                                /// to get one user
     try {
         const data = await model.findById(req.params.id);
         console.log(data)
@@ -61,7 +61,7 @@ exports.UserInfo = async (req, res) => {
 
 
 
-exports.AddUserInfo = async (req, res) => {
+exports.AddUserInfo = async (req, res) => {                                                // to add user
     try {
        
         const { MobileNumber, Email } = req.body;
@@ -83,7 +83,7 @@ exports.AddUserInfo = async (req, res) => {
             return res.status(400).json({ message: 'No file uploaded.' });
           }
           
-        req.body.MobileNumber = parseInt(MobileNumber, 10);
+        req.body.MobileNumber = parseInt(MobileNumber, 10);                                 /// till here looking for data is ok or not
     
         
         const data = new model({
@@ -96,7 +96,7 @@ exports.AddUserInfo = async (req, res) => {
 
         res.status(200).send(data);
     } catch (error) {
-        if(error.code === 11000 ) {
+        if(error.code === 11000 ) {                                        // will throw this error if email is repeat
 
            return  res.status(400).send({ message: 'Email already exists' , flag:1 });
           } 
@@ -108,7 +108,7 @@ exports.AddUserInfo = async (req, res) => {
 
 
 
-exports.UpdateUserInfo = async (req, res) => {
+exports.UpdateUserInfo = async (req, res) => {                                                            // edit user
     try {
         const id = req.body._id;
 
@@ -129,7 +129,7 @@ exports.UpdateUserInfo = async (req, res) => {
             return res.status(400).send({ message: "Valid Mobile Number is required" ,flag:2 });
         }
 
-        let updateData = { ...req.body };
+        let updateData = { ...req.body };                                                               // deleting file
         if (req.file) {
             updateData.filename = req.file.filename;
         
@@ -177,7 +177,7 @@ exports.UpdateUserInfo = async (req, res) => {
 
 
 
-exports.DeleteUserInfo = async (req, res) => {
+exports.DeleteUserInfo = async (req, res) => {                                                 // deleting data 
     try {
         const id = req.params.id;
 
@@ -187,7 +187,7 @@ exports.DeleteUserInfo = async (req, res) => {
             return res.status(404).send({ message: "No data found" });
         }
 
-        const filePath = path.join(__dirname,'../../../Upload',userData.filename);
+        const filePath = path.join(__dirname,'../../../Upload',userData.filename);                                     // deleting file
         fs.unlink(filePath, function (err) {
                 if (err) {
                     if (err.code === 'ENOENT') {

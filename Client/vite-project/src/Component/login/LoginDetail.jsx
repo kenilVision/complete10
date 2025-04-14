@@ -7,7 +7,9 @@ import { getLogin } from '../../Api/Profile';
 import Button from '../Common/Button';
 import Input from '../Common/Input'
 function LoginDetail() {
-    const [Credential, SetCredential] = useState({
+
+
+    const [Credential, SetCredential] = useState({  /// credential for login form
         Email: "", 
         Password: "" 
     });
@@ -15,12 +17,12 @@ function LoginDetail() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    function Handler(e) {
+    function Handler(e) {                          //  function to handle chane in form 
         const { name, value } = e.target;
         SetCredential({ ...Credential, [name]: value.trim() }); 
     }
 
-  function SubmitHandler(e) {
+  function SubmitHandler(e) {                     // submit buttom for form 
         e.preventDefault();
        getLogin(Credential)
             .then(res => {  
